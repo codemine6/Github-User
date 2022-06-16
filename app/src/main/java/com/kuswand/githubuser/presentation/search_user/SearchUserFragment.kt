@@ -11,7 +11,9 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.kuswand.githubuser.R
 import com.kuswand.githubuser.databinding.FragmentSearchUserBinding
+import com.kuswand.githubuser.presentation.user_detail.UserDetailFragment
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -37,7 +39,18 @@ class SearchUserFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val userPagingAdapter = UserPagingAdapter()
+        val userPagingAdapter = UserPagingAdapter {
+            val fragment = UserDetailFragment()
+            fragment.arguments = Bundle().apply {
+                putString("LOGIN", it.login)
+            }
+
+            requireActivity().supportFragmentManager.beginTransaction().apply {
+                replace(R.id.flContainer, fragment)
+                addToBackStack(null)
+                commit()
+            }
+        }
         binding.rvResult.apply {
             layoutManager = LinearLayoutManager(activity)
             adapter = userPagingAdapter

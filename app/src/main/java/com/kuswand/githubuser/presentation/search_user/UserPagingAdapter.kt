@@ -9,7 +9,7 @@ import com.bumptech.glide.Glide
 import com.kuswand.githubuser.databinding.ItemUserBinding
 import com.kuswand.githubuser.domain.model.User
 
-class UserPagingAdapter : PagingDataAdapter<User, UserPagingAdapter.ViewHolder>(DiffUtilCallback()) {
+class UserPagingAdapter(val onItemClick: (User) -> Unit) : PagingDataAdapter<User, UserPagingAdapter.ViewHolder>(DiffUtilCallback()) {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val user = getItem(position)!!
@@ -20,6 +20,9 @@ class UserPagingAdapter : PagingDataAdapter<User, UserPagingAdapter.ViewHolder>(
                 .into(civAvatar)
 
             tvLogin.text = user.login
+        }
+        holder.itemView.setOnClickListener {
+            onItemClick(user)
         }
     }
 
